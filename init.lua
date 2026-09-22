@@ -36,12 +36,12 @@ require("lazy").setup({
 
   -- Treesitter (coloration syntaxique, notamment pour Solidity)
   -- Nouvelle API (branche "main", réécriture 1.0 de nvim-treesitter)
-  {
+  --[[{
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
     build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter").install({ "solidity", "lua", "c", "bash", "python" })
+      require("nvim-treesitter").install({ "solidity", "lua", "c", "bash", "python" }):wait(300000)
 
       vim.api.nvim_create_autocmd("FileType", {
         pattern = { "solidity", "lua", "c", "bash", "python" },
@@ -50,7 +50,19 @@ require("lazy").setup({
         end,
       })
     end,
-  },
+  },]]
+
+  {
+	"nvim-treesitter/nvim-treesitter",
+	branch = "master",
+	build = ":TSUpdate",
+	config = function()
+	  require("nvim-treesitter.configs").setup({
+		ensure_installed = { "solidity", "lua", "c", "bash", "python" },
+		highlight = { enable = true },
+	  })
+	end,
+ },
 
   -- Autocomplétion
   "hrsh7th/nvim-cmp",
@@ -96,7 +108,17 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>nf", norm.format, { silent = true })
     end,
   },
+
+  -- Commentaires rapides (gcc, gc en visuel)
+  {
+    "numToStr/Comment.nvim",
+    config = function()
+      require("Comment").setup()
+    end,
+  },
 })
+
+
 
 -- ============================================================
 -- Filetypes additionnels

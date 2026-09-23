@@ -22,6 +22,7 @@ Le projet est développé progressivement, avec une priorité donnée à la comp
 ```text
 ~/.config/nvim/
 ├── init.lua
+├── lazy-lock.json
 │
 └── lua/
     ├── config/
@@ -36,9 +37,31 @@ Le projet est développé progressivement, avec une priorité donnée à la comp
     │   └── which-key.lua
     │
     └── plugins/
+        ├── 42norm.lua
+        ├── catppuccin.lua
+        ├── comment.lua
+        ├── completion.lua
+        ├── lsp.lua
+        ├── lualine.lua
+        ├── nvim-tree.lua
+        ├── telescope.lua
+        ├── treesitter.lua
+        └── which-key.lua
 ```
 
-Le dossier `lua/plugins/` existe actuellement et sera utilisé progressivement pour mieux séparer les déclarations de plugins de la configuration générale.
+L'architecture sépare volontairement deux responsabilités :
+
+```text
+lua/config/
+    ↓
+Configuration et comportement des outils
+
+lua/plugins/
+    ↓
+Déclarations des plugins et de leurs dépendances
+```
+
+`init.lua` est principalement responsable du bootstrap de Neovim, de Lazy.nvim et du chargement des modules de configuration.
 
 ---
 
@@ -70,23 +93,63 @@ L'utilisation de tabulations plutôt que d'espaces est volontaire afin de respec
 
 # 🔌 Gestion des plugins
 
-Les plugins sont actuellement gérés avec **lazy.nvim**.
+Les plugins sont gérés avec **lazy.nvim**.
 
 Le bootstrap de Lazy.nvim est effectué directement depuis `init.lua`.
 
-Les déclarations de plugins sont actuellement centralisées dans `init.lua`, tandis que leurs configurations commencent à être séparées dans :
-
-```text
-lua/config/
-```
-
-Une migration progressive vers :
+Les déclarations des plugins sont séparées dans :
 
 ```text
 lua/plugins/
 ```
 
-est prévue.
+Chaque fichier de ce dossier retourne une spécification Lazy.nvim.
+
+Exemple :
+
+```lua
+return {
+  "nvim-telescope/telescope.nvim",
+
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+  },
+}
+```
+
+La configuration fonctionnelle des plugins est séparée dans :
+
+```text
+lua/config/
+```
+
+Cette séparation permet notamment de distinguer :
+
+```text
+Plugin
+   ↓
+Dépendances / lazy-loading / build
+   ↓
+lua/plugins/
+
+Configuration du plugin
+   ↓
+Options / keymaps / comportement
+   ↓
+lua/config/
+```
+
+## Lazy-lock
+
+Le fichier :
+
+```text
+lazy-lock.json
+```
+
+est généré et maintenu par Lazy.nvim.
+
+Il contient les commits exacts des plugins utilisés afin de permettre de conserver des versions reproductibles de la configuration.
 
 ---
 
@@ -227,6 +290,18 @@ Enter        → confirmer
 
 LuaSnip est utilisé pour la gestion des snippets.
 
+Les plugins nécessaires à l'autocomplétion sont regroupés dans :
+
+```text
+lua/plugins/completion.lua
+```
+
+tandis que leur comportement est configuré dans :
+
+```text
+lua/config/completion.lua
+```
+
 ---
 
 # 🌳 Treesitter
@@ -243,10 +318,16 @@ Python
 Solidity
 ```
 
-La configuration utilise également la mise à jour automatique des parsers avec :
+La configuration utilise également la mise à jour des parsers avec :
 
 ```text
 :TSUpdate
+```
+
+La déclaration du plugin et son processus de build sont définis dans :
+
+```text
+lua/plugins/treesitter.lua
 ```
 
 ---
@@ -333,8 +414,9 @@ Les éléments actuellement validés comprennent :
 * [x] 42norm.nvim
 * [x] Comment.nvim
 * [x] Which-Key
+* [x] Séparation `lua/config/` / `lua/plugins/`
 
-Une vérification globale avec :
+Une vérification avec :
 
 ```text
 :checkhealth
@@ -342,7 +424,7 @@ Une vérification globale avec :
 
 a également été effectuée.
 
-Certains warnings correspondent à des dépendances optionnelles qui ne sont actuellement pas nécessaires.
+Certains warnings correspondent à des dépendances ou fonctionnalités optionnelles qui ne sont actuellement pas nécessaires.
 
 ---
 
@@ -350,9 +432,11 @@ Certains warnings correspondent à des dépendances optionnelles qui ne sont act
 
 ## Architecture
 
-* [ ] Restructurer progressivement `lua/plugins/`
-* [ ] Séparer les déclarations Lazy.nvim des configurations
-* [ ] Tester chaque migration individuellement
+* [x] Séparer les déclarations Lazy.nvim des configurations
+* [x] Utiliser `lua/plugins/` pour les specs Lazy.nvim
+* [x] Utiliser `lua/config/` pour les configurations
+* [x] Tester chaque migration individuellement
+* [ ] Vérifier et améliorer progressivement l'organisation des modules
 
 ## Telescope
 
@@ -431,11 +515,12 @@ L'IA ne devra pas modifier automatiquement le projet sans validation.
 
 ## Git de la configuration
 
-* [ ] Mettre cette configuration Neovim sur Git
-* [ ] Créer un dépôt dédié
-* [ ] Versionner `init.lua`
-* [ ] Versionner `lua/config/`
-* [ ] Versionner `lua/plugins/`
+* [x] Mettre cette configuration Neovim sur Git
+* [x] Créer un dépôt dédié
+* [x] Versionner `init.lua`
+* [x] Versionner `lua/config/`
+* [x] Versionner `lua/plugins/`
+* [x] Versionner `lazy-lock.json`
 * [ ] Préparer une installation sur une nouvelle machine
 * [ ] Créer éventuellement un script d'installation
 * [ ] Documenter le déploiement

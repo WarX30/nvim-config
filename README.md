@@ -12,8 +12,9 @@ L'objectif est de construire progressivement un environnement capable de réunir
 * gestion Git
 * outils d'IA
 * automatisation et maintenance de la configuration
+* installation et déploiement sur différentes machines
 
-Le projet est développé progressivement, avec une priorité donnée à la compréhension de chaque outil et à la stabilité de la configuration.
+Le projet est développé progressivement, avec une priorité donnée à la compréhension de chaque outil, à la stabilité de la configuration et à sa portabilité.
 
 ---
 
@@ -23,6 +24,7 @@ Le projet est développé progressivement, avec une priorité donnée à la comp
 ~/.config/nvim/
 ├── init.lua
 ├── lazy-lock.json
+├── LICENSE
 │
 └── lua/
     ├── config/
@@ -34,7 +36,8 @@ Le projet est développé progressivement, avec une priorité donnée à la comp
     │   ├── treesitter.lua
     │   ├── 42norm.lua
     │   ├── comment.lua
-    │   └── which-key.lua
+    │   ├── which-key.lua
+    │   └── telescope.lua
     │
     └── plugins/
         ├── 42norm.lua
@@ -186,6 +189,7 @@ Les groupes actuels comprennent notamment :
 ```text
 <leader>f  Recherche
 <leader>n  42 Norme
+<leader>g  Git
 <leader>e  Explorateur
 ```
 
@@ -193,28 +197,84 @@ Les groupes actuels comprennent notamment :
 
 # 🔎 Recherche — Telescope
 
-Telescope est actuellement utilisé pour la recherche rapide.
+Telescope est utilisé comme interface principale de recherche et de navigation dans le projet.
 
-### Rechercher un fichier
+## Recherche de fichiers
 
 ```text
 <leader>ff
 ```
 
-### Rechercher du texte
+## Recherche dans les fichiers
 
 ```text
 <leader>fg
 ```
 
-Telescope sera développé ultérieurement avec notamment :
+## Buffers
 
-* buffers
-* fichiers récents
-* symboles LSP
-* diagnostics
-* keymaps
-* intégration Git
+```text
+<leader>fb
+```
+
+## Fichiers récents
+
+```text
+<leader>fr
+```
+
+## Symboles du fichier
+
+```text
+<leader>fs
+```
+
+## Symboles du projet
+
+```text
+<leader>fS
+```
+
+## Diagnostics
+
+```text
+<leader>fd
+```
+
+## Git
+
+```text
+<leader>gs  Git status
+<leader>gc  Git commits
+<leader>gb  Git branches
+<leader>gB  Commits du fichier
+```
+
+## Configuration
+
+Telescope utilise notamment :
+
+* une interface horizontale
+* une largeur de fenêtre de 90 %
+* une hauteur de fenêtre de 80 %
+* une preview occupant environ 50 % de l'espace
+* une preview visible au démarrage
+* `Ctrl + J` pour descendre dans les résultats
+* `Ctrl + K` pour remonter dans les résultats
+
+Les mappings natifs de Telescope, notamment pour les actions sur les résultats, sont conservés.
+
+La configuration est séparée dans :
+
+```text
+lua/config/telescope.lua
+```
+
+et sa déclaration Lazy.nvim dans :
+
+```text
+lua/plugins/telescope.lua
+```
 
 ---
 
@@ -238,7 +298,14 @@ solidity_ls_nomicfoundation
 ts_ls
 ```
 
-### C / C++
+La configuration utilise l'API LSP de **Neovim 0.11**, notamment :
+
+```text
+vim.lsp.config()
+vim.lsp.enable()
+```
+
+## C / C++
 
 `clangd` est utilisé pour :
 
@@ -248,7 +315,7 @@ ts_ls
 * informations sur les symboles
 * intégration avec l'autocomplétion
 
-### Solidity
+## Solidity
 
 Un serveur LSP Solidity est également configuré :
 
@@ -342,19 +409,19 @@ Fonctionnalités utilisées :
 * formatage
 * génération/mise à jour du header 42
 
-### Header 42
+## Header 42
 
 ```text
 F1
 ```
 
-### Vérifier la Norme
+## Vérifier la Norme
 
 ```text
 <leader>nc
 ```
 
-### Formater
+## Formater
 
 ```text
 <leader>nf
@@ -394,7 +461,7 @@ solidity
 
 # 🧪 Validation actuelle
 
-La configuration a été testée progressivement après chaque modularisation.
+La configuration est développée et testée progressivement.
 
 Les éléments actuellement validés comprennent :
 
@@ -405,6 +472,15 @@ Les éléments actuellement validés comprennent :
 * [x] NvimTree
 * [x] Lualine
 * [x] Telescope
+* [x] Telescope buffers
+* [x] Telescope fichiers récents
+* [x] Telescope symboles LSP
+* [x] Telescope diagnostics
+* [x] Telescope Git
+* [x] Configuration Telescope
+* [x] Layout Telescope
+* [x] Navigation Telescope
+* [x] Preview Telescope
 * [x] nvim-cmp
 * [x] LuaSnip
 * [x] Mason
@@ -440,13 +516,16 @@ Certains warnings correspondent à des dépendances ou fonctionnalités optionne
 
 ## Telescope
 
-* [ ] Configuration avancée
-* [ ] Buffers
-* [ ] Fichiers récents
-* [ ] Symboles LSP
-* [ ] Diagnostics
-* [ ] Keymaps
-* [ ] Git
+* [x] Configuration avancée
+* [x] Buffers
+* [x] Fichiers récents
+* [x] Symboles LSP
+* [x] Diagnostics
+* [x] Keymaps
+* [x] Git
+* [x] Configuration du layout
+* [x] Navigation personnalisée
+* [x] Preview
 * [ ] Installer `fd`
 
 ## Which-Key
@@ -461,7 +540,7 @@ Certains warnings correspondent à des dépendances ou fonctionnalités optionne
 * [ ] `add`
 * [ ] `commit`
 * [ ] `push`
-* [ ] Intégration Git avec Telescope
+* [x] Intégration Git avec Telescope
 
 ## Gestion des fenêtres
 
@@ -513,6 +592,26 @@ L'IA ne devra pas modifier automatiquement le projet sans validation.
 * [ ] Créer un backup/commit avant modification
 * [ ] Générer un rapport après l'audit
 
+## Installation et portabilité
+
+L'objectif est de pouvoir déployer la configuration sur une nouvelle machine sans supposer que l'utilisateur possède les droits administrateur.
+
+* [ ] Détecter automatiquement les dépendances manquantes
+* [ ] Distinguer les dépendances obligatoires des dépendances optionnelles
+* [ ] Vérifier les outils déjà installés avant toute installation
+* [ ] Prévoir une installation dans l'espace utilisateur lorsque `sudo` n'est pas disponible
+* [ ] Gérer les outils externes nécessaires à certaines fonctionnalités
+* [ ] Vérifier les versions des dépendances
+* [ ] Créer un mécanisme de bootstrap
+* [ ] Créer un `install.sh`
+* [ ] Préparer l'installation sur une nouvelle machine
+* [ ] Tester l'installation sur une deuxième machine
+* [ ] Documenter le processus de déploiement
+
+Le mécanisme d'installation devra éviter les installations inutiles et expliquer clairement les dépendances qui doivent être ajoutées ou mises à jour.
+
+---
+
 ## Git de la configuration
 
 * [x] Mettre cette configuration Neovim sur Git
@@ -521,6 +620,7 @@ L'IA ne devra pas modifier automatiquement le projet sans validation.
 * [x] Versionner `lua/config/`
 * [x] Versionner `lua/plugins/`
 * [x] Versionner `lazy-lock.json`
+* [x] Ajouter une licence MIT
 * [ ] Préparer une installation sur une nouvelle machine
 * [ ] Créer éventuellement un script d'installation
 * [ ] Documenter le déploiement
@@ -538,18 +638,25 @@ Chaque nouvelle fonctionnalité doit répondre à un besoin réel et être compr
 À terme, l'objectif est d'obtenir un environnement combinant :
 
 ```text
-Neovim
-  │
-  ├── C / C++
-  ├── Solidity
-  ├── LSP
-  ├── Treesitter
-  ├── Autocomplétion
-  ├── Norme 42
-  ├── Git
-  ├── Recherche avancée
-  ├── IA
-  └── Automatisation
+                         Mini IDE 42
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+   Développement          Productivité          Intelligence
+        │                     │                     │
+   ├── C / C++           ├── Telescope          ├── IA
+   ├── Solidity          ├── Git                ├── Analyse projet
+   ├── LSP               ├── Buffers            └── Refactoring
+   ├── Treesitter        └── Automatisation
+   └── Norme 42
+                              │
+                              ↓
+                       Maintenance
+                              │
+                              ↓
+                    Installation portable
 ```
 
 Le projet évoluera progressivement avec mon apprentissage.
+
+L'objectif final n'est donc pas uniquement d'avoir une configuration fonctionnelle, mais de construire un **environnement cohérent, reproductible, maintenable et portable**, capable d'évoluer avec mes compétences et mes besoins.

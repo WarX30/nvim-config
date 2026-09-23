@@ -23,6 +23,11 @@ wk.add({
     icon = "🎓",
   },
   {
+	"<leader>g",
+	group = "Git",
+	icon = "",
+  },
+  {
     "<leader>e",
     desc = "Ouvrir/Fermer l'explorateur",
     icon = "📁",

@@ -63,3 +63,6 @@ vim.keymap.set("n", "<leader>ad", git.diff,
 
 vim.keymap.set("n", "<leader>aa", git.add,
 	{ desc = "Git add fichier courant" })
+
+vim.keymap.set("n", "<leader>ac", git.commit,
+	{ desc = "Git commit" })

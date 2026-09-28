@@ -24,9 +24,14 @@ local function git_commit()
 	vim.cmd("!git commit -m " .. vim.fn.shellescape(message))
 end
 
+local function git_push()
+	vim.cmd("!git push")
+end
+
 return {
 	status = git_status,
 	diff = git_diff,
 	add = git_add,
 	commit = git_commit,
+	push = git_push,
 }

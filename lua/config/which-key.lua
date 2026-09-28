@@ -28,6 +28,11 @@ wk.add({
 	icon = "",
   },
   {
+    "<leader>a",
+    group = "Git actions",
+    icon = "",
+  },
+  {
     "<leader>e",
     desc = "Ouvrir/Fermer l'explorateur",
     icon = "📁",

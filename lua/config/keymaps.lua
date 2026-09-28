@@ -1,6 +1,7 @@
 -- ============================================================
 -- Raccourcis clavier
 -- ============================================================
+local git = require("config.git")
 
 -- Explorateur de fichiers
 vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>",
@@ -52,3 +53,13 @@ end, { desc = "Vérifier la Norme 42" })
 vim.keymap.set("n", "<leader>nf", function()
 	require("42norm").format()
 end, { desc = "Formater selon la Norme 42" })
+
+-- Git
+vim.keymap.set("n", "<leader>as", git.status,
+	{ desc = "Git status" })
+
+vim.keymap.set("n", "<leader>ad", git.diff,
+	{ desc = "Git diff" })
+
+vim.keymap.set("n", "<leader>aa", git.add,
+	{ desc = "Git add fichier courant" })

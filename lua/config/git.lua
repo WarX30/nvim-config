@@ -14,8 +14,19 @@ local function git_add()
 	vim.cmd("!git add %")
 end
 
+local function git_commit()
+	local message = vim.fn.input("Commit message: ")
+
+	if message == "" then
+		return
+	end
+
+	vim.cmd("!git commit -m " .. vim.fn.shellescape(message))
+end
+
 return {
 	status = git_status,
 	diff = git_diff,
 	add = git_add,
+	commit = git_commit,
 }

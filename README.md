@@ -37,7 +37,8 @@ Le projet est développé progressivement, avec une priorité donnée à la comp
     │   ├── 42norm.lua
     │   ├── comment.lua
     │   ├── which-key.lua
-    │   └── telescope.lua
+    │   ├── telescope.lua
+    │   └── git.lua
     │
     └── plugins/
         ├── 42norm.lua
@@ -166,6 +167,8 @@ Thème principal utilisé :
 catppuccin
 ```
 
+Le thème fonctionne actuellement, mais le rendu visuel du background sera réévalué ultérieurement.
+
 ## NvimTree
 
 Explorateur de fichiers permettant notamment de naviguer dans l'arborescence du projet.
@@ -190,7 +193,24 @@ Les groupes actuels comprennent notamment :
 <leader>f  Recherche
 <leader>n  42 Norme
 <leader>g  Git
+<leader>a  Git actions
 <leader>e  Explorateur
+```
+
+Les fonctions Git sont volontairement séparées en deux groupes :
+
+```text
+<leader>g
+    ↓
+Git via Telescope
+    ↓
+Recherche / navigation / historique
+
+<leader>a
+    ↓
+Git actions
+    ↓
+Actions réelles sur le dépôt
 ```
 
 ---
@@ -459,6 +479,58 @@ solidity
 
 ---
 
+# 🌿 Git
+
+Git est intégré directement à Neovim à l'aide des commandes Git natives et d'un module Lua dédié.
+
+L'architecture utilisée est :
+
+```text
+keymaps.lua
+      ↓
+config/git.lua
+      ↓
+commande Git native
+      ↓
+Git
+```
+
+La configuration est séparée dans :
+
+```text
+lua/config/git.lua
+```
+
+## Actions Git
+
+```text
+<leader>as  Git status
+<leader>ad  Git diff
+<leader>aa  Git add du fichier courant
+<leader>ac  Git commit
+<leader>ap  Git push
+```
+
+Le commit demande directement le message depuis Neovim.
+
+Les commandes Git ont été testées individuellement et validées.
+
+La partie Git via Telescope reste séparée :
+
+```text
+<leader>g
+```
+
+permet d'explorer l'historique et l'état Git avec Telescope, tandis que :
+
+```text
+<leader>a
+```
+
+regroupe les actions Git.
+
+---
+
 # 🧪 Validation actuelle
 
 La configuration est développée et testée progressivement.
@@ -491,6 +563,11 @@ Les éléments actuellement validés comprennent :
 * [x] Comment.nvim
 * [x] Which-Key
 * [x] Séparation `lua/config/` / `lua/plugins/`
+* [x] Git status
+* [x] Git diff
+* [x] Git add
+* [x] Git commit
+* [x] Git push
 
 Une vérification avec :
 
@@ -514,6 +591,12 @@ Certains warnings correspondent à des dépendances ou fonctionnalités optionne
 * [x] Tester chaque migration individuellement
 * [ ] Vérifier et améliorer progressivement l'organisation des modules
 
+## Interface / thème
+
+* [ ] Revoir le rendu visuel du background
+* [ ] Évaluer la couleur de fond du thème
+* [ ] Améliorer la cohérence visuelle générale
+
 ## Telescope
 
 * [x] Configuration avancée
@@ -534,13 +617,15 @@ Certains warnings correspondent à des dépendances ou fonctionnalités optionne
 
 ## Git
 
-* [ ] Ajouter des commandes Git directement dans Neovim
-* [ ] `status`
-* [ ] `diff`
-* [ ] `add`
-* [ ] `commit`
-* [ ] `push`
+* [x] `status`
+* [x] `diff`
+* [x] `add`
+* [x] `commit`
+* [x] `push`
 * [x] Intégration Git avec Telescope
+* [ ] Améliorer le rendu des commandes Git
+* [ ] Étudier une exécution asynchrone des commandes Git
+* [ ] Ajouter éventuellement des fonctionnalités Git plus avancées
 
 ## Gestion des fenêtres
 
@@ -660,3 +745,11 @@ Chaque nouvelle fonctionnalité doit répondre à un besoin réel et être compr
 Le projet évoluera progressivement avec mon apprentissage.
 
 L'objectif final n'est donc pas uniquement d'avoir une configuration fonctionnelle, mais de construire un **environnement cohérent, reproductible, maintenable et portable**, capable d'évoluer avec mes compétences et mes besoins.
+
+---
+
+## 📜 Licence
+
+Ce projet est distribué sous licence **MIT**.
+
+Voir le fichier [`LICENSE`](LICENSE) pour le texte complet de la licence.

@@ -69,3 +69,10 @@ vim.keymap.set("n", "<leader>ac", git.commit,
 
 vim.keymap.set("n", "<leader>ap", git.push,
 	{ desc = "Git push" })
+
+-- ============================================================
+-- Terminal
+-- ============================================================
+
+vim.keymap.set("n", "<leader>t", "<cmd>botright split | terminal<CR>",
+	{ desc = "Ouvrir le terminal" })
